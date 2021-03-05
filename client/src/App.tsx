@@ -1,6 +1,6 @@
+import { SearchIcon } from '@chakra-ui/icons';
 import {
   Box,
-  Button,
   Flex,
   Heading,
   HStack,
@@ -11,10 +11,28 @@ import {
   InputRightElement,
   Text,
 } from '@chakra-ui/react';
-import React from 'react';
-import { SearchIcon } from '@chakra-ui/icons';
+import axios from 'axios';
+import React, { useState } from 'react';
 
-function App() {
+export function App() {
+  const [query, setQuery] = useState('');
+
+  const apexProfile = async (username: string) => {
+    try {
+      const data = await axios.get(`http://localhost:8080/profile/origin/${username}`);
+      console.log(data.data);
+      return data.data;
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  const onSubmit = (e: any) => {
+    e.preventDefault();
+    apexProfile(query);
+    setQuery('');
+  };
+
   return (
     <Flex flexDirection="column" minHeight="100vh">
       <Box
@@ -35,12 +53,19 @@ function App() {
           <Heading color="white">Apex Legends</Heading>
           <Heading color="white">Stats</Heading>
         </Flex>
-        <InputGroup w={300}>
-          <Input placeholder="Enter Origin Username" bg="white" />
-          <InputRightElement
-            children={<IconButton aria-label="Search API" icon={<SearchIcon />} />}
-          />
-        </InputGroup>
+        <form onSubmit={onSubmit}>
+          <InputGroup w={300}>
+            <Input
+              placeholder="Enter Origin Username"
+              bg="white"
+              onChange={(e) => setQuery(e.target.value)}
+              value={query}
+            />
+            <InputRightElement
+              children={<IconButton aria-label="Search API" icon={<SearchIcon />} />}
+            />
+          </InputGroup>
+        </form>
 
         <HStack>
           <Text color="white" fontSize={20} fontWeight="bold" ml={50}>
@@ -51,5 +76,3 @@ function App() {
     </Flex>
   );
 }
-
-export default App;

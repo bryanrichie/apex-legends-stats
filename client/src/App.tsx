@@ -9,27 +9,20 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Select,
   Text,
 } from '@chakra-ui/react';
-import axios from 'axios';
 import React, { useState } from 'react';
+import { apexProfile, apexUsers } from './api';
 
 export function App() {
   const [query, setQuery] = useState('');
-
-  const apexProfile = async (username: string) => {
-    try {
-      const data = await axios.get(`http://localhost:8080/profile/origin/${username}`);
-      console.log(data.data);
-      return data.data;
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
+  const [platform, setPlatform] = useState('');
 
   const onSubmit = (e: any) => {
     e.preventDefault();
-    apexProfile(query);
+    apexUsers(platform, query);
+    apexProfile(platform, query);
     setQuery('');
   };
 
@@ -54,19 +47,34 @@ export function App() {
           <Heading color="white">Stats</Heading>
         </Flex>
         <form onSubmit={onSubmit}>
-          <InputGroup w={300}>
-            <Input
-              placeholder="Enter Origin Username"
+          <Flex>
+            <Select
+              placeholder="Select Platform"
               bg="white"
-              onChange={(e) => setQuery(e.target.value)}
-              value={query}
-            />
-            <InputRightElement
-              children={<IconButton aria-label="Search API" icon={<SearchIcon />} />}
-            />
-          </InputGroup>
+              w={200}
+              onChange={(e) => {
+                setPlatform(e.target.value);
+              }}
+            >
+              <option value="origin">Origin</option>
+              <option value="xbl">Xbox Live</option>
+              <option value="psn">Playstation Network</option>
+            </Select>
+            <InputGroup w={300}>
+              <Input
+                placeholder="Enter Origin Username"
+                bg="white"
+                onChange={(e) => setQuery(e.target.value)}
+                value={query}
+              />
+              <InputRightElement
+                children={
+                  <IconButton onClick={onSubmit} aria-label="Search API" icon={<SearchIcon />} />
+                }
+              />
+            </InputGroup>
+          </Flex>
         </form>
-
         <HStack>
           <Text color="white" fontSize={20} fontWeight="bold" ml={50}>
             Leaderboards

@@ -1,5 +1,6 @@
 import { SearchIcon } from '@chakra-ui/icons';
 import {
+  Avatar,
   Box,
   Flex,
   Heading,
@@ -11,23 +12,28 @@ import {
   InputRightElement,
   Select,
   Text,
+  Wrap,
+  WrapItem,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import { apexProfile, apexUsers } from './api';
+import { apexProfile, ApexUser, apexUsers } from './api';
+import { Users } from './Users';
 
 export function App() {
   const [query, setQuery] = useState('');
   const [platform, setPlatform] = useState('');
+  const [users, setUsers] = useState<ApexUser[]>([]);
 
-  const onSubmit = (e: any) => {
+  const onSubmit = async (e: any) => {
     e.preventDefault();
-    apexUsers(platform, query);
-    apexProfile(platform, query);
+    const listOfUsers = await apexUsers(platform, query);
+    setUsers(listOfUsers);
+    // apexProfile(platform, query);
     setQuery('');
   };
 
   return (
-    <Flex flexDirection="column" minHeight="100vh">
+    <Flex flexDirection="column" minHeight="100vh" flexWrap="wrap">
       <Box
         bgImage="url('./kings-canyon-bg.jpg')"
         bgPosition="center"
@@ -40,7 +46,7 @@ export function App() {
         filter="blur(3px)"
         zIndex={-1}
       />
-      <Flex bg="gray.700" w="100%" align="center" borderBottomLeftRadius={50}>
+      <Flex bg="gray.700" align="center" borderBottomLeftRadius={50} mb={5}>
         <Image src="./apex-legends-logo.png" alt="logo" boxSize="100px" ml={5} mt={5} mb={5} />
         <Flex flexDir="column" align="center" mr={70}>
           <Heading color="white">Apex Legends</Heading>
@@ -81,6 +87,8 @@ export function App() {
           </Text>
         </HStack>
       </Flex>
+
+      <Users apexUsers={users} />
     </Flex>
   );
 }

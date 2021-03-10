@@ -1,35 +1,16 @@
 import React from 'react';
 import _ from 'lodash';
-import {
-  Box,
-  Flex,
-  Heading,
-  HStack,
-  IconButton,
-  Image,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Select,
-  Text,
-} from '@chakra-ui/react';
+import { Flex, Heading, HStack, Image, Input, InputGroup, Select, Text } from '@chakra-ui/react';
 import { StringParam, useQueryParam } from 'use-query-params';
 import { Link } from 'react-router-dom';
 
 export const NavBar = () => {
   const [platform, setPlatform] = useQueryParam('platform', StringParam);
   const [searchTerm, setSearchTerm] = useQueryParam('search', StringParam);
-  // const [platform, setPlatform] = React.useState('');
 
-  const onSearch = _.debounce((value: string) => {
+  const onChange = _.debounce((value: string) => {
     setSearchTerm(value);
   }, 500);
-
-  // const onSubmit = (e: any) => {
-  //   e.preventDefault();
-  //   setPlatform('');
-  //   setSearchTerm('');
-  // };
 
   // bg:
   // <Flex flexDirection="column" minHeight="100vh" flexWrap="wrap">
@@ -73,8 +54,8 @@ export const NavBar = () => {
           <Input
             placeholder="Enter Origin Username"
             bg="white"
-            onChange={(e) => onSearch(e.target.value)}
-            defaultValue={searchTerm as string}
+            onChange={(e) => onChange(e.target.value)}
+            defaultValue={''}
           />
         </InputGroup>
       </Flex>

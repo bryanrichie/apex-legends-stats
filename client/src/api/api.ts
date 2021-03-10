@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export interface ApexUser {
   avatarUrl: string;
-  //   platformSlug: string;
+  platformSlug: string;
   platformUserIdentifier: string;
 }
 

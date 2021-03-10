@@ -2,7 +2,7 @@ import { Avatar, Box, Flex, HStack, Text, Wrap, WrapItem } from '@chakra-ui/reac
 import _ from 'lodash';
 import React from 'react';
 
-import { ApexUser } from './api';
+import { ApexUser } from '../api/api';
 
 interface Props {
   apexUsers: ApexUser[];

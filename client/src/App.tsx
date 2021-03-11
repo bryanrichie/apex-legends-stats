@@ -1,39 +1,15 @@
-import { SearchIcon } from '@chakra-ui/icons';
-import {
-  Avatar,
-  Box,
-  Flex,
-  Heading,
-  HStack,
-  IconButton,
-  Image,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Select,
-  Text,
-  Wrap,
-  WrapItem,
-} from '@chakra-ui/react';
-import React, { useState } from 'react';
-import { apexProfile, ApexUser, apexUsers } from './api';
-import { Users } from './Users';
+import { Box, Flex } from '@chakra-ui/react';
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { QueryParamProvider } from 'use-query-params';
+
+import { Nav } from './components/Nav';
+import { Home } from './pages/Home';
+import { Profile } from './pages/Profile';
 
 export function App() {
-  const [query, setQuery] = useState('');
-  const [platform, setPlatform] = useState('');
-  const [users, setUsers] = useState<ApexUser[]>([]);
-
-  const onSubmit = async (e: any) => {
-    e.preventDefault();
-    const listOfUsers = await apexUsers(platform, query);
-    setUsers(listOfUsers);
-    // apexProfile(platform, query);
-    setQuery('');
-  };
-
   return (
-    <Flex flexDirection="column" minHeight="100vh" flexWrap="wrap">
+    <Flex flexDirection="column" minHeight="100vh">
       <Box
         bgImage="url('./kings-canyon-bg.jpg')"
         bgPosition="center"
@@ -46,49 +22,19 @@ export function App() {
         filter="blur(3px)"
         zIndex={-1}
       />
-      <Flex bg="gray.700" align="center" borderBottomLeftRadius={50} mb={5}>
-        <Image src="./apex-legends-logo.png" alt="logo" boxSize="100px" ml={5} mt={5} mb={5} />
-        <Flex flexDir="column" align="center" mr={70}>
-          <Heading color="white">Apex Legends</Heading>
-          <Heading color="white">Stats</Heading>
-        </Flex>
-        <form onSubmit={onSubmit}>
-          <Flex>
-            <Select
-              placeholder="Select Platform"
-              bg="white"
-              w={200}
-              onChange={(e) => {
-                setPlatform(e.target.value);
-              }}
-            >
-              <option value="origin">Origin</option>
-              <option value="xbl">Xbox Live</option>
-              <option value="psn">Playstation Network</option>
-            </Select>
-            <InputGroup w={300}>
-              <Input
-                placeholder="Enter Origin Username"
-                bg="white"
-                onChange={(e) => setQuery(e.target.value)}
-                value={query}
-              />
-              <InputRightElement
-                children={
-                  <IconButton onClick={onSubmit} aria-label="Search API" icon={<SearchIcon />} />
-                }
-              />
-            </InputGroup>
-          </Flex>
-        </form>
-        <HStack>
-          <Text color="white" fontSize={20} fontWeight="bold" ml={50}>
-            Leaderboards
-          </Text>
-        </HStack>
-      </Flex>
-
-      <Users apexUsers={users} />
+      <Router>
+        <QueryParamProvider ReactRouterRoute={Route}>
+          <Nav />
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route path="/profile/:platform/:id">
+              <Profile />
+            </Route>
+          </Switch>
+        </QueryParamProvider>
+      </Router>
     </Flex>
   );
 }

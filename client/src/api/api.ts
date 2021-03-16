@@ -17,9 +17,9 @@ export interface ApexProfile {
   };
   segments: [
     {
-      type: string;
       metadata: {
         name: string;
+        imageUrl?: string;
       };
       stats: {
         [key: string]: {
@@ -28,7 +28,7 @@ export interface ApexProfile {
           value: number;
           displayName: string;
           displayCategory: string;
-          displayValue: string;
+          displayValue?: string;
           metadata: {
             iconUrl: string;
             rankName: string;

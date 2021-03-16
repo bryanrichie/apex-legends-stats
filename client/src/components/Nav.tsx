@@ -53,6 +53,7 @@ export const Nav = () => {
               <Input
                 placeholder="Enter Username"
                 bg="white"
+                value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
               <InputRightElement

@@ -39,13 +39,13 @@ export interface ApexProfile {
   ];
   userInfo: {
     countryCode: string;
-    socialAccounts?: [
-      {
-        platformSlug: string;
-        platformUserIdentifier: string;
-      }
-    ];
+    socialAccounts: SocialAccount[];
   };
+}
+
+export interface SocialAccount {
+  platformSlug: string;
+  platformUserIdentifier: string;
 }
 
 export const apexUsers = async (platform: string, query: string): Promise<ApexUser[]> => {

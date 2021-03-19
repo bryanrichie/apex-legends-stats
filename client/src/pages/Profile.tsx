@@ -57,9 +57,15 @@ const SocialsCheck = (props: { socialAccounts: SocialAccount[] }) => {
 export const Profile = () => {
   const { platform, id } = useParams<{ platform: string; id: string }>();
 
-  const { isFetching, isLoading, data, error, isError } = useQuery('apexProfile', () => {
-    return apexProfile(platform, id);
-  });
+  const { isFetching, data, error, isError } = useQuery(
+    'apexProfile',
+    () => {
+      return apexProfile(platform, id);
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   if (isFetching) {
     return (
@@ -83,7 +89,13 @@ export const Profile = () => {
 
   const { segments, platformInfo, userInfo } = data;
 
-  const topLegendStats = _.orderBy(_.tail(segments));
+  const topLegendStats = _.orderBy(
+    _.tail(segments),
+    (segment) => {
+      return segment.stats?.kills?.value;
+    },
+    ['desc']
+  );
 
   const percentageCalc = (percentile: number): number => {
     return Math.round((100 - percentile) * 100) / 100;
@@ -91,22 +103,16 @@ export const Profile = () => {
 
   const platformLogoCheck = () => {
     if (platformInfo.platformSlug === 'origin') {
-      return 'https://techgage.com/wp-content/uploads/2013/10/EA-Origin-Logo.png';
+      return '/origin-logo.png';
     } else if (platformInfo.platformSlug === 'psn') {
-      return 'https://cdn.freebiesupply.com/images/large/2x/playstation-logo-png-transparent.png';
+      return '/psn-logo.png';
     } else if (platformInfo.platformSlug === 'xbl') {
-      return 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Xbox_one_logo.svg/1200px-Xbox_one_logo.svg.png';
+      return '/xbl-logo.png';
     }
   };
 
-  //  find which segments dont have the kills object
-  //  remove the segments that dont have the kills object
-  //  display the remaining segments
-  //  sort according to amount of kills
-
   const legendStats = _.map(topLegendStats, (legend) => {
-    console.log(legend.stats);
-    const test = () => {
+    const legendStatDisplay = () => {
       if (!_.isUndefined(legend.stats.kills)) {
         return (
           <Flex
@@ -140,10 +146,8 @@ export const Profile = () => {
         return null;
       }
     };
-
-    return test();
+    return legendStatDisplay();
   });
-
   return (
     <Flex flexDir="column">
       <Box
@@ -166,7 +170,6 @@ export const Profile = () => {
             <Text color="white" fontSize={40} fontWeight="bold">
               {platformInfo.platformUserIdentifier}
             </Text>
-            <Image src="/canada-icon.png" alt="canada logo" boxSize={10} fit="scale-down" pt={3} />
           </HStack>
           <HStack mr={5} spacing={10}>
             <SocialsCheck socialAccounts={userInfo.socialAccounts} />

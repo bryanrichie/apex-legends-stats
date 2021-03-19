@@ -1,9 +1,8 @@
-import React from 'react';
+import { Alert, AlertIcon, AlertTitle, Flex, Spinner } from '@chakra-ui/react';
 import _ from 'lodash';
-import { Alert, AlertIcon, AlertTitle, Box, Flex, Spinner } from '@chakra-ui/react';
+import React from 'react';
 import { useQuery } from 'react-query';
 import { StringParam, useQueryParam } from 'use-query-params';
-
 import { apexUsers } from '../api/api';
 import { Users } from '../components/Users';
 
@@ -11,13 +10,19 @@ export const Home = () => {
   const [platform] = useQueryParam('platform', StringParam);
   const [searchTerm] = useQueryParam('search', StringParam);
 
-  const { isLoading, data, error, isError } = useQuery(searchTerm || 'search', () => {
-    if (!_.isNil(platform) && !_.isNil(searchTerm)) {
-      return apexUsers(platform, searchTerm);
+  const { isFetching, data, error, isError } = useQuery(
+    searchTerm || 'search',
+    () => {
+      if (!_.isNil(platform) && !_.isNil(searchTerm)) {
+        return apexUsers(platform, searchTerm);
+      }
+    },
+    {
+      refetchOnWindowFocus: false,
     }
-  });
+  );
 
-  if (isLoading) {
+  if (isFetching) {
     return (
       <Flex h="100vh" justify="center">
         <Spinner color="red" />

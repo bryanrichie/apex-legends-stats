@@ -1,8 +1,7 @@
-import React from 'react';
-import _ from 'lodash';
 import { Avatar, HStack, Text, Wrap, WrapItem } from '@chakra-ui/react';
+import _ from 'lodash';
+import React from 'react';
 import { Link } from 'react-router-dom';
-
 import { ApexUser } from '../api/api';
 
 interface Props {

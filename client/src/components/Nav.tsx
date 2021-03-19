@@ -69,11 +69,6 @@ export const Nav = () => {
             Home
           </Text>
         </Link>
-        <Link to="/leaderboards">
-          <Text color="white" fontSize={20} fontWeight="bold" ml={50}>
-            Leaderboards
-          </Text>
-        </Link>
       </HStack>
     </Flex>
   );
